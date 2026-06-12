@@ -45,7 +45,7 @@ android {
 
     packagingOptions {
         jniLibs {
-            excludes += ['META-INF/*']
+            excludes += ['META-INF/*', '**/libbass.so', '**/libbass_ssl.so']
         }
         resources {
             excludes += ['META-INF/*']
