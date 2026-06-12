@@ -21,6 +21,8 @@
   <a href="#thai"><img src="https://img.shields.io/badge/THAI-111827?style=for-the-badge&logo=readme&logoColor=A78BFA" alt="Thai"></a>
   <a href="#build"><img src="https://img.shields.io/badge/BUILD-0F172A?style=for-the-badge&logo=gradle&logoColor=38BDF8" alt="Build"></a>
   <a href="#mission-control"><img src="https://img.shields.io/badge/MISSION_CONTROL-1E1B4B?style=for-the-badge&logo=rocket&logoColor=00F5FF" alt="Mission Control"></a>
+  <a href="#ai-development-notice"><img src="https://img.shields.io/badge/AI_ASSISTED-312E81?style=for-the-badge&logo=openai&logoColor=FFFFFF" alt="AI Assisted Development"></a>
+  <a href="#project-scope"><img src="https://img.shields.io/badge/SCOPE-BASIC_READY-0F766E?style=for-the-badge&logo=target&logoColor=FFFFFF" alt="Project Scope"></a>
   <a href="#disclaimer"><img src="https://img.shields.io/badge/DISCLAIMER-450A0A?style=for-the-badge&logo=warning&logoColor=FCA5A5" alt="Disclaimer"></a>
 </p>
 
@@ -83,6 +85,42 @@ It is maintained as a **development, research, preservation, and technical refer
 
 ---
 
+<a id="ai-development-notice"></a>
+
+## ✦ AI-Assisted Development Notice
+
+> [!NOTE]
+> This repository is developed primarily through an AI-assisted workflow.
+
+This source archive is maintained as an experimental development project where most research, planning, code generation, refactoring, fixes, commits, and repository updates may be performed with the assistance of AI tools.
+
+**JohnPeriaX** acts mainly as the project owner, operator, and prompt/skill provider. The role is to provide direction, requirements, prompts, review context, and development goals while allowing the AI workflow to analyze, implement, revise, and improve the project as independently as possible.
+
+The current AI-assisted workflow uses **ChatGPT** as a main development assistant. In the future, other AI models, agents, or automation tools may also be used to support development.
+
+Because AI-generated or AI-assisted work can contain mistakes, incomplete logic, incorrect assumptions, security issues, or unstable behavior, all important code, technical information, build output, and runtime behavior should be manually reviewed and tested before use.
+
+This project should be treated as an **experimental research snapshot**, not a production-ready release. Before using, modifying, redistributing, or deploying anything from this repository, please verify the code, test the build, inspect dependencies, review native libraries/assets, and confirm that the project is suitable for your own environment.
+
+---
+
+<a id="project-scope"></a>
+
+## ✦ Development Target & Project Scope
+
+> [!IMPORTANT]
+> The goal of this project is to let the AI-assisted workflow bring the source to a basic usable state, similar in structure and purpose to common SAMP Mobile source bases such as 1.08, 2.0, or 2.10.
+
+This repository is intended to reach a **basic ready-to-use foundation** for development, study, testing, and further modification. It may provide the essential structure, build setup, runtime flow, and source organization expected from a typical SRC archive.
+
+However, it should not be expected to match every feature, private fix, optimization, compatibility layer, or commercial-level completeness found in expensive privately sold source packages. Some systems may be simplified, incomplete, experimental, unstable, or still waiting for future improvement.
+
+The AI workflow will continue improving the project until the basic foundation is considered complete enough for the intended research and development purpose. After that point, updates may slow down, pause, or stop unless new prompts, requirements, fixes, or development resources are provided.
+
+If commits stop appearing or the repository becomes quiet for several days, please understand that development has probably paused because the available AI token budget has run out. In simple terms: **no commits may simply mean no tokens left.**
+
+---
+
 ## ✦ Core Modules
 
 <table>
@@ -104,15 +142,15 @@ It is maintained as a **development, research, preservation, and technical refer
 
 ## ✦ Tech Profile
 
-| Item | Value |
-| --- | --- |
-| Package namespace | `com.kurdish.roleplay` |
-| Minimum SDK | `28` |
-| Target SDK | `36` |
-| Compile SDK | `36` |
-| NDK version | `26.2.11394342` |
-| Native build system | `CMake` |
-| Supported ABI | `armeabi-v7a`, `arm64-v8a` |
+| Item                | Value                      |
+| ------------------- | -------------------------- |
+| Package namespace   | `com.kurdish.roleplay`     |
+| Minimum SDK         | `28`                       |
+| Target SDK          | `36`                       |
+| Compile SDK         | `36`                       |
+| NDK version         | `26.2.11394342`            |
+| Native build system | `CMake`                    |
+| Supported ABI       | `armeabi-v7a`, `arm64-v8a` |
 
 ---
 
@@ -191,11 +229,11 @@ Compatible JDK
 
 ## ✦ Known Condition
 
-- Bugs and crashes may still exist
-- Some systems may be incomplete
-- Android compatibility may require fixes
-- Storage path behavior may change between commits
-- Build setup may require manual adjustment
+* Bugs and crashes may still exist
+* Some systems may be incomplete
+* Android compatibility may require fixes
+* Storage path behavior may change between commits
+* Build setup may require manual adjustment
 
 ---
 
@@ -208,6 +246,42 @@ Compatible JDK
 **SAMP Mobile 2.11.311** เป็น source snapshot สำหรับโปรเจกต์ **GTA SA Mobile 2.11 / SAMP Mobile** บน Android
 
 Repository นี้ถูกเก็บไว้เพื่อเป็นแหล่งอ้างอิงด้าน **การพัฒนา การวิจัย การเก็บรักษา และการศึกษาเชิงเทคนิค** ภายในมี Android launcher, Java source, JNI/native bridge, C++ game/SAMP code, assets, resources และ native library integration
+
+---
+
+<a id="ai-development-notice-th"></a>
+
+## ✦ ประกาศเกี่ยวกับการพัฒนาโดย AI
+
+> [!NOTE]
+> Repository นี้ถูกพัฒนาโดยใช้กระบวนการทำงานร่วมกับ AI เป็นหลัก
+
+Source archive นี้เป็นโปรเจกต์ทดลองที่ให้ AI มีบทบาทหลักในการช่วยวิเคราะห์ วางแผน เขียนโค้ด refactor แก้ไขปัญหา commit / push และปรับปรุง repository ตามแนวทางที่ได้รับจาก prompt, skill และ requirement ที่กำหนดไว้
+
+**JohnPeriaX** มีบทบาทหลักในฐานะเจ้าของโปรเจกต์ ผู้ควบคุมทิศทาง และผู้ให้ prompt / skill / requirement โดยไม่ได้เป็นผู้เขียนหรือแก้ไขทุกส่วนของ source code ด้วยตนเองทั้งหมด แต่ปล่อยให้ workflow ของ AI วิเคราะห์ พัฒนา แก้ไข และปรับปรุงโปรเจกต์ด้วยตัวเองให้มากที่สุด
+
+Workflow ปัจจุบันใช้ **ChatGPT** เป็นผู้ช่วยหลักในการพัฒนา และในอนาคตอาจมี AI model, AI agent หรือ automation tool อื่นเข้ามาช่วยพัฒนาเพิ่มเติมได้
+
+เนื่องจากงานที่สร้างหรือแก้ไขด้วย AI อาจมีข้อผิดพลาด logic ไม่สมบูรณ์ assumption ที่ไม่ถูกต้อง ปัญหาด้าน security หรือพฤติกรรมที่ไม่เสถียร ผู้ใช้งานควรตรวจสอบข้อมูลสำคัญ ตรวจ review code และทดสอบ build / runtime behavior ด้วยตนเองก่อนนำไปใช้งาน
+
+โปรเจกต์นี้ควรถูกมองเป็น **experimental research snapshot** ไม่ใช่ production-ready release ก่อนนำ source code ไปใช้งานจริง แก้ไขต่อ แจกจ่าย หรือนำไป deploy ควรตรวจสอบโค้ด ทดสอบ build ตรวจ dependency ตรวจ native library / asset และประเมินความเหมาะสมกับ environment ของตนเองก่อนเสมอ
+
+---
+
+<a id="project-scope-th"></a>
+
+## ✦ เป้าหมายการพัฒนาและขอบเขตของโปรเจกต์
+
+> [!IMPORTANT]
+> เป้าหมายของโปรเจกต์นี้คือให้ AI-assisted workflow พัฒนา source ให้พร้อมใช้งานในระดับพื้นฐาน คล้ายแนวทางของ SRC ทั่วไป เช่น 1.08, 2.0 หรือ 2.10
+
+Repository นี้ตั้งใจให้เป็น **พื้นฐานที่พร้อมสำหรับการใช้งานเบื้องต้น** สำหรับการพัฒนา การศึกษา การทดสอบ และการนำไปปรับแต่งต่อ โดยอาจมีโครงสร้างหลัก build setup, runtime flow และการจัดวาง source ตามรูปแบบที่คาดหวังจาก SRC ทั่วไป
+
+อย่างไรก็ตาม ไม่ควรคาดหวังว่าโปรเจกต์นี้จะรองรับครบทุกระบบ มี private fix ทุกจุด มี optimization ทุกส่วน หรือสมบูรณ์เทียบเท่า source package เชิงพาณิชย์ราคาแพงที่มีการซื้อขายกันแบบส่วนตัว บางระบบอาจยังเป็นแบบพื้นฐาน ทดลอง ใช้งานได้บางส่วน ไม่เสถียร หรือรอการพัฒนาต่อในอนาคต
+
+AI workflow จะพยายามพัฒนาโปรเจกต์นี้ไปจนถึงระดับพื้นฐานที่ถือว่าเพียงพอต่อเป้าหมายด้าน research และ development เมื่อถึงจุดนั้น การอัปเดตอาจช้าลง หยุดชั่วคราว หรือหยุดพัฒนา จนกว่าจะมี prompt, requirement, bug report, แนวทางแก้ไข หรือทรัพยากรสำหรับพัฒนาต่อเพิ่มเติม
+
+ถ้าวันไหน commit ไม่อัปเดต หรือ repository เงียบหายไปหลายวัน โปรดเข้าใจไว้ก่อนว่า development อาจหยุดพักเพราะ token สำหรับใช้งาน AI หมดแล้ว พูดง่าย ๆ คือ **ไม่มี commit อาจแปลว่า token หมด**
 
 ---
 
@@ -232,15 +306,15 @@ Repository นี้ถูกเก็บไว้เพื่อเป็นแ
 
 ## ✦ ข้อมูลเทคนิค
 
-| รายการ | ค่า |
-| --- | --- |
-| Package namespace | `com.kurdish.roleplay` |
-| Minimum SDK | `28` |
-| Target SDK | `36` |
-| Compile SDK | `36` |
-| NDK version | `26.2.11394342` |
-| Native build system | `CMake` |
-| ABI ที่รองรับ | `armeabi-v7a`, `arm64-v8a` |
+| รายการ              | ค่า                        |
+| ------------------- | -------------------------- |
+| Package namespace   | `com.kurdish.roleplay`     |
+| Minimum SDK         | `28`                       |
+| Target SDK          | `36`                       |
+| Compile SDK         | `36`                       |
+| NDK version         | `26.2.11394342`            |
+| Native build system | `CMake`                    |
+| ABI ที่รองรับ       | `armeabi-v7a`, `arm64-v8a` |
 
 ---
 
@@ -317,11 +391,11 @@ JDK ที่เข้ากันได้
 
 ## ✦ สถานะที่ควรทราบ
 
-- อาจยังมีบั๊กและ crash
-- บางระบบอาจยังไม่สมบูรณ์
-- Android compatibility อาจต้องแก้เพิ่ม
-- Storage path อาจเปลี่ยนตาม commit
-- Build setup อาจต้องปรับเองบางส่วน
+* อาจยังมีบั๊กและ crash
+* บางระบบอาจยังไม่สมบูรณ์
+* Android compatibility อาจต้องแก้เพิ่ม
+* Storage path อาจเปลี่ยนตาม commit
+* Build setup อาจต้องปรับเองบางส่วน
 
 ---
 
