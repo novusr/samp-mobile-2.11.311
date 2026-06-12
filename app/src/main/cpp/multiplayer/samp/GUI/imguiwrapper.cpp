@@ -47,15 +47,16 @@ bool ImGuiWrapper::initialize()
     fontCfg.GlyphExtraSpacing.x = UISettings::outlineSize();
 
     static const ImWchar ranges[] =
-            {
-                    0x0020, 0x00FF, // Basic Latin + Latin Supplement
-                    0x0400, 0x04FF, // Cyrillic + Cyrillic Supplement
-                    0x0E00, 0x0E7F, // Thai
-                    0x2DE0, 0x2DFF, // Cyrillic Extended-A
-                    0xA640, 0xA69F, // Cyrillic Extended-B
-                    0xF020, 0xF0FF,
-                    0
-            };
+    {
+        0x0020, 0x00FF, // Basic Latin + Latin Supplement
+        0x0400, 0x04FF, // Russia
+        0x0E00, 0x0E5B, // Thai
+        0x2DE0, 0x2DFF, // Cyrillic Extended-A
+        0xA640, 0xA69F, // Cyrillic Extended-B
+        0xF020, 0xF0FF, // Half-width characters
+        0x2010, 0x205E, // Punctuations
+        0
+    };
 
     ImFont* font = io.Fonts->AddFontFromFileTTF(m_fontPath.c_str(),
                                                 UISettings::fontSize(), &fontCfg, ranges);

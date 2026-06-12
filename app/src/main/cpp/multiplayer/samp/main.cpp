@@ -292,7 +292,7 @@ void DoInitStuff()
 	{
 		ReadSettingFile();
 
-		pNetGame = new CNetGame("play.uifserver.net", 7776, "John_Doe", "");
+		pNetGame = new CNetGame("gta-irz.com", 7777, "Luca_Runky", "");
 		bNetworkInited = true;
 
         FLog("DoInitStuff end");
