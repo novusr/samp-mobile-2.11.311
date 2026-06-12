@@ -70,6 +70,9 @@ void InstallCrashFixHooks();
 void FLog(const char* fmt, ...);
 void InitFPSFix(uint8_t targetFPS);
 void ProcessFPSFixFrame();
+void SetFPSDisplayRefreshRate(float refreshRateHz);
+uint8_t GetEffectiveFPSLimit();
+float GetFPSDisplayRefreshRate();
 //void MyLog(const char* fmt, ...);
 
 void SetStoragePath(const char* path)
@@ -317,6 +320,20 @@ CVector2D radarBgPos1 = {0,0};
 CVector2D radarBgPos2 = {0,0};
 
 extern "C" {
+
+	JNIEXPORT void JNICALL Java_com_kurdish_roleplay_game_SAMP_setDisplayRefreshRate(JNIEnv *pEnv, jobject thiz, jfloat refreshRateHz)
+	{
+		SetFPSDisplayRefreshRate(static_cast<float>(refreshRateHz));
+		FLog("FPSFix: Java display refresh %.2f Hz, effective FPS limit %u",
+			 static_cast<double>(GetFPSDisplayRefreshRate()),
+			 static_cast<unsigned>(GetEffectiveFPSLimit()));
+	}
+
+	JNIEXPORT jint JNICALL Java_com_kurdish_roleplay_game_SAMP_getEffectiveFPSLimit(JNIEnv *pEnv, jobject thiz)
+	{
+		return static_cast<jint>(GetEffectiveFPSLimit());
+	}
+
 	JNIEXPORT void JNICALL Java_com_kurdish_roleplay_game_SAMP_initializeSAMP(JNIEnv *pEnv, jobject thiz, jstring gameBaseDirectory)
 	{
 		if (gameBaseDirectory != nullptr) {

@@ -1,8 +1,12 @@
 package com.kurdish.roleplay.game;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Display;
 import android.view.KeyEvent;
+import android.view.WindowManager;
+import android.widget.Toast;
 
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.joom.paranoid.Obfuscate;
@@ -17,6 +21,7 @@ import com.kurdish.roleplay.launcher.util.GameStorage;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
+import java.util.Locale;
 
 @Obfuscate
 public class SAMP extends GTASA implements CustomKeyboard.InputListener, HeightProvider.HeightListener {
@@ -33,6 +38,9 @@ public class SAMP extends GTASA implements CustomKeyboard.InputListener, HeightP
     Tab mTab = null;
     Hud mHud = null;
     Speedometer mSpeedometer = null;
+
+    private float mLastDisplayRefreshRate = -1.0f;
+    private int mLastEffectiveFPSLimit = -1;
 
     //java systems
     public void updateSpeedInfo(int speed, int fuel, int hp, int mileage, int engine, int light, int belt, int lock) { runOnUiThread(() -> { mSpeedometer.UpdateSpeedInfo(speed, fuel, hp, mileage, engine, light, belt, lock); }); }
@@ -56,6 +64,66 @@ public class SAMP extends GTASA implements CustomKeyboard.InputListener, HeightP
 
     public static SAMP getInstance() {
         return instance;
+    }
+
+    private native void setDisplayRefreshRate(float refreshRateHz);
+    private native int getEffectiveFPSLimit();
+
+    private float getCurrentDisplayRefreshRate() {
+        try {
+            Display display = null;
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                display = getDisplay();
+            }
+
+            if (display == null) {
+                WindowManager windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
+                if (windowManager != null) {
+                    display = windowManager.getDefaultDisplay();
+                }
+            }
+
+            if (display != null) {
+                float refreshRate = display.getRefreshRate();
+                if (refreshRate > 1.0f) {
+                    return refreshRate;
+                }
+            }
+        } catch (Throwable throwable) {
+            Log.w(TAG, "Failed to read display refresh rate", throwable);
+        }
+
+        return 60.0f;
+    }
+
+    private void syncDisplayRefreshRateLimit(boolean forceShow) {
+        float refreshRate = getCurrentDisplayRefreshRate();
+        int fallbackLimit = refreshRate >= 119.0f ? 120 : 60;
+        int effectiveLimit = fallbackLimit;
+
+        try {
+            setDisplayRefreshRate(refreshRate);
+            effectiveLimit = getEffectiveFPSLimit();
+        } catch (UnsatisfiedLinkError error) {
+            Log.e(TAG, "FPS refresh-rate native sync failed: " + error.getMessage());
+        }
+
+        String status = String.format(Locale.US,
+                "Display Hz: %.2f | FPS Limit: %d",
+                refreshRate, effectiveLimit);
+        Log.i(TAG, status);
+
+        boolean changed = Math.abs(refreshRate - mLastDisplayRefreshRate) >= 0.5f
+                || effectiveLimit != mLastEffectiveFPSLimit;
+
+        if (forceShow || changed) {
+            final String toastText = status;
+            runOnUiThread(() -> Toast.makeText(this, toastText, Toast.LENGTH_SHORT).show());
+        }
+
+        mLastDisplayRefreshRate = refreshRate;
+        mLastEffectiveFPSLimit = effectiveLimit;
     }
 
 
@@ -162,6 +230,7 @@ public class SAMP extends GTASA implements CustomKeyboard.InputListener, HeightP
 
         try {
             initializeSAMP(GameStorage.getGameBasePath(this));
+            syncDisplayRefreshRateLimit(true);
         } catch (UnsatisfiedLinkError e5) {
             Log.e(TAG, e5.getMessage());
         }
@@ -185,6 +254,7 @@ public class SAMP extends GTASA implements CustomKeyboard.InputListener, HeightP
     public void onResume() {
         Log.i(TAG, "**** onResume");
         super.onResume();
+        syncDisplayRefreshRateLimit(false);
     }
 
     public native void onEventBackPressed();
@@ -200,6 +270,15 @@ public class SAMP extends GTASA implements CustomKeyboard.InputListener, HeightP
         if (keyCode == KeyEvent.KEYCODE_BACK)
             onEventBackPressed();
         return super.onKeyDown(keyCode, event);
+    }
+
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if (hasFocus) {
+            syncDisplayRefreshRateLimit(false);
+        }
     }
 
     @Override

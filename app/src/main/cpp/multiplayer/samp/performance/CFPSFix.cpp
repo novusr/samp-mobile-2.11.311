@@ -25,6 +25,15 @@ namespace
         return fps;
     }
 
+    uint8_t DisplayCapFor(float refreshRateHz)
+    {
+        // User rule:
+        // - If the active display mode is not really 120Hz, cap the game at 60 FPS.
+        // - Only allow 120 FPS when the current active refresh rate reaches 120Hz.
+        // 119.0 keeps room for Android reporting 119.88/119.99 instead of exactly 120.
+        return refreshRateHz >= 119.0f ? 120 : 60;
+    }
+
     std::chrono::nanoseconds FrameDurationFor(uint8_t fps)
     {
         const uint8_t safeFPS = ClampFPS(fps);
@@ -88,12 +97,58 @@ void CFPSFix::Shutdown()
 
 void CFPSFix::SetTargetFPS(uint8_t targetFPS)
 {
-    m_TargetFPS.store(ClampFPS(targetFPS));
+    m_ConfiguredFPS.store(ClampFPS(targetFPS));
+    RecalculateEffectiveFPS(true);
+}
+
+void CFPSFix::SetDisplayRefreshRate(float refreshRateHz)
+{
+    if (refreshRateHz < 1.0f)
+        refreshRateHz = 60.0f;
+
+    m_DisplayRefreshRate.store(refreshRateHz);
+    RecalculateEffectiveFPS(true);
 }
 
 uint8_t CFPSFix::GetTargetFPS() const
 {
     return ClampFPS(m_TargetFPS.load());
+}
+
+uint8_t CFPSFix::GetConfiguredFPS() const
+{
+    return ClampFPS(m_ConfiguredFPS.load());
+}
+
+uint8_t CFPSFix::GetDisplayCapFPS() const
+{
+    return DisplayCapFor(m_DisplayRefreshRate.load());
+}
+
+float CFPSFix::GetDisplayRefreshRate() const
+{
+    return m_DisplayRefreshRate.load();
+}
+
+void CFPSFix::RecalculateEffectiveFPS(bool applyPatch)
+{
+    const uint8_t configuredFPS = GetConfiguredFPS();
+    const uint8_t displayCap = GetDisplayCapFPS();
+    const uint8_t effectiveFPS = std::min(configuredFPS, displayCap);
+
+    const uint8_t oldFPS = m_TargetFPS.exchange(effectiveFPS);
+
+    FLog("FPSFix: Display Hz %.2f, configured FPS %u, display cap %u, effective FPS %u",
+         static_cast<double>(GetDisplayRefreshRate()),
+         static_cast<unsigned>(configuredFPS),
+         static_cast<unsigned>(displayCap),
+         static_cast<unsigned>(effectiveFPS));
+
+    if (applyPatch && m_Initialized.load() && oldFPS != effectiveFPS)
+    {
+        ApplyFPSPatch(effectiveFPS);
+        ResetFrameClock();
+    }
 }
 
 void CFPSFix::ResetFrameClock()
@@ -186,6 +241,31 @@ void CFPSFix::PushThread(pid_t tid)
 void InitFPSFix(uint8_t targetFPS)
 {
     CFPSFix::Instance().Init(targetFPS);
+}
+
+void SetFPSDisplayRefreshRate(float refreshRateHz)
+{
+    CFPSFix::Instance().SetDisplayRefreshRate(refreshRateHz);
+}
+
+uint8_t GetEffectiveFPSLimit()
+{
+    return CFPSFix::Instance().GetTargetFPS();
+}
+
+uint8_t GetConfiguredFPSLimit()
+{
+    return CFPSFix::Instance().GetConfiguredFPS();
+}
+
+uint8_t GetDisplayFPSCap()
+{
+    return CFPSFix::Instance().GetDisplayCapFPS();
+}
+
+float GetFPSDisplayRefreshRate()
+{
+    return CFPSFix::Instance().GetDisplayRefreshRate();
 }
 
 void ShutdownFPSFix()
