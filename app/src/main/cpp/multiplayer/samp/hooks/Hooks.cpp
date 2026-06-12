@@ -910,7 +910,6 @@ void CRenderer_RenderEverythingBarRoads_hook() {
 	//	}
 }
 
-#include "CFPSFix.h"
 #include "gta-reversed/game_sa/Pickups.h"
 #include "gta-reversed/game_sa/TimeCycle.h"
 #include "gta-reversed/game_sa/Pipelines/CustomCar/CustomCarEnvMapPipeline.h"
@@ -920,12 +919,12 @@ void CRenderer_RenderEverythingBarRoads_hook() {
 
 #include "gta-reversed/game_sa/Widgets/WidgetGta.h"
 
-CFPSFix g_fps;
+void RegisterFPSThread(pid_t tid);
 
 void (*ANDRunThread)(void* a1);
 void ANDRunThread_hook(void* a1)
 {
-	g_fps.PushThread(gettid());
+	RegisterFPSThread(gettid());
 
 	ANDRunThread(a1);
 }

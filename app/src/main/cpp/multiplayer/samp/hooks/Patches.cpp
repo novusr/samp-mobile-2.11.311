@@ -16,16 +16,33 @@ extern CGame* pGame;
 
 void ApplyFPSPatch(uint8_t fps)
 {
-    uint8_t targetFPS = 120;
-    CHook::WriteMemory(g_libGTASA + 0x3683D0, "\xE8\x0F\x80\x52", 4);
-    CHook::WriteMemory(g_libGTASA + 0x368644, "\x08\x0F\x80\x52", 4);
-    CHook::WriteMemory(g_libGTASA + 0x3685B8, "\x09\x0F\x80\x52", 4);
-    CHook::WriteMemory(g_libGTASA + 0x368924, "\x08\x0F\x80\x52", 4);
+    uint8_t targetFPS = fps;
+    if (targetFPS < 30) targetFPS = 30;
+    if (targetFPS > 120) targetFPS = 120;
 
-   // CHook::WriteMemory(g_libGTASA + 0x368688+1, &targetFPS, 1);
-    //CHook::WriteMemory(g_libGTASA + 0x70A458+1, &targetFPS, 1);
+#if VER_x32
+    // 2.11 arm32 FPS addresses were not confirmed in the provided LST set.
+    // Do not patch guessed offsets. Keep this branch intentionally safe.
+    FLog("FPS patch skipped for arm32: address mapping is not confirmed");
+#else
+    auto makeMovWImm = [](uint8_t reg, uint16_t imm) -> uint32_t {
+        return 0x52800000u | ((static_cast<uint32_t>(imm) & 0xFFFFu) << 5u) | (reg & 0x1Fu);
+    };
+
+    const uint32_t movW8Fps = makeMovWImm(8, targetFPS);
+    const uint32_t movW9Fps = makeMovWImm(9, targetFPS);
+
+    // 2.11 libGame.so.lst verified: DoGameState(float) FPS constants.
+    CHook::WriteMemory(g_libGTASA + 0x3683D0, &movW8Fps, sizeof(movW8Fps));
+    CHook::WriteMemory(g_libGTASA + 0x368644, &movW8Fps, sizeof(movW8Fps));
+    CHook::WriteMemory(g_libGTASA + 0x3685B8, &movW9Fps, sizeof(movW9Fps));
+    CHook::WriteMemory(g_libGTASA + 0x368924, &movW8Fps, sizeof(movW8Fps));
+
+#endif
+
     FLog("New fps limit = %d", targetFPS);
 }
+
 
 void DisableAutoAim()
 {

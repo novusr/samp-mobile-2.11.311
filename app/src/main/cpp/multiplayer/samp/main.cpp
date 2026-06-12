@@ -68,6 +68,8 @@ void InitRenderWareFunctions();
 void InitializeGraphicsSystem();
 void InstallCrashFixHooks();
 void FLog(const char* fmt, ...);
+void InitFPSFix(uint8_t targetFPS);
+void ProcessFPSFixFrame();
 //void MyLog(const char* fmt, ...);
 
 void SetStoragePath(const char* path)
@@ -292,6 +294,16 @@ void DoInitStuff()
 	{
 		ReadSettingFile();
 
+		uint8_t fpsLimit = 120;
+		if (pSettings)
+		{
+			int configuredFPS = pSettings->Get().iFPSCount;
+			if (configuredFPS < 30) configuredFPS = 30;
+			if (configuredFPS > 120) configuredFPS = 120;
+			fpsLimit = static_cast<uint8_t>(configuredFPS);
+		}
+		InitFPSFix(fpsLimit);
+
 		pNetGame = new CNetGame("gta-irz.com", 7777, "Luca_Runky", "");
 		bNetworkInited = true;
 
@@ -376,6 +388,8 @@ void MainLoop()
 {
 	if (pGame->bIsGameExiting) return;
 
+	ProcessFPSFixFrame();
+
 	DoInitStuff();
 
 	if (bDebug) {
@@ -448,6 +462,7 @@ jint JNI_OnLoad(JavaVM* vm, void* reserved)
 	CHook::InitHookStuff();
 	InstallSpecialHooks();
 	ApplyPatches_level0();
+	InitFPSFix(120);
     //SetUpGLHooks();
     InitRenderWareFunctions();
 
