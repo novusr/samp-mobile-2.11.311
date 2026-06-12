@@ -30,7 +30,8 @@ jobs:
           path: |
             ~/.gradle/caches
             ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/gradle/wrapper/gradle-wrapper.properties') }}
+            ~/.gradle/build-cache
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/gradle/wrapper/gradle-wrapper.properties') }}-${{ hashFiles('**/build.gradle') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
 
@@ -46,12 +47,12 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Build debug APK
-        run: ./gradlew --no-daemon clean assembleDebug
+        run: ./gradlew --no-daemon --parallel --build-cache clean assembleDebug
         env:
           ANDROID_SDK_ROOT: ${{ env.ANDROID_SDK_ROOT }}
           ANDROID_HOME: ${{ env.ANDROID_SDK_ROOT }}
 
-      - name: Upload APK artifact
+      - name: Upload apk
         uses: actions/upload-artifact@v4
         with:
           name: app-debug-apk
