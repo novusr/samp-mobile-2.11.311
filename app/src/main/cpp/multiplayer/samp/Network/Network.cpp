@@ -478,6 +478,10 @@ void CNetGame::ProcessPools()
 		GetPickupPool()->Process();
 	}
 
+	if (GetMenuPool()) {
+		GetMenuPool()->Process();
+	}
+
 }	
 // 0.3.7
 void CNetGame::ProcessLoadingScreen()

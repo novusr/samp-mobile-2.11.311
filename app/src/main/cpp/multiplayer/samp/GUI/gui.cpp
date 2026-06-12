@@ -151,6 +151,9 @@ void UI::drawList()
     if (pGPS) pGPS->DoPathDraw();
 
     draw(renderer());
+
+    if (pNetGame && pNetGame->GetMenuPool())
+        pNetGame->GetMenuPool()->Render(renderer());
 }
 
 void UI::touchEvent(const ImVec2& pos, TouchType type)
@@ -226,6 +229,9 @@ bool UI::OnTouchEvent(int type, bool multi, int x, int y)
             //if (vbutton->countdown > 50) vbutton->countdown = 20;
             break;
     }
+
+    if (pNetGame && pNetGame->GetMenuPool() && pNetGame->GetMenuPool()->OnTouchEvent(type, x, y))
+        return true;
 
     return true;
 }
