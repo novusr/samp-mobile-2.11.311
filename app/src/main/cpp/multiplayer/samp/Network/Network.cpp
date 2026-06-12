@@ -128,12 +128,14 @@ CNetGame::~CNetGame()
 void CNetGame::InitializePools()
 {
 	m_pPools = new NET_POOLS;
+	memset(m_pPools, 0, sizeof(NET_POOLS));
 	m_pPools->pPlayerPool = new CPlayerPool();
 	m_pPools->pVehiclePool = new CVehiclePool();
 
 	m_pPools->pMenuPool = new CMenuPool();
 	m_pPools->pPlayerBubblePool = new CPlayerBubblePool();
 	m_pPools->pObjectPool = new CObjectPool();
+	m_pPools->pTextLabelPool = new C3DTextLabelPool();
 }
 
 void CNetGame::UninitializePools()
@@ -160,6 +162,12 @@ void CNetGame::UninitializePools()
 	{
 		delete m_pPools->pPlayerBubblePool;
 		m_pPools->pPlayerBubblePool = nullptr;
+	}
+
+	if (m_pPools->pTextLabelPool)
+	{
+		delete m_pPools->pTextLabelPool;
+		m_pPools->pTextLabelPool = nullptr;
 	}
 
 	if (m_pPools) {
@@ -1023,7 +1031,8 @@ void CNetGame::ResetGangZonePool()
 // 0.3.7
 void CNetGame::Reset3DTextLabelPool()
 {
-
+	if (m_pPools && m_pPools->pTextLabelPool)
+		m_pPools->pTextLabelPool->Reset();
 }
 // 0.3.7
 void CNetGame::ResetMapIcons()

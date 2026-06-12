@@ -145,7 +145,7 @@ void UI::drawList()
     this->addChild(label);*/
 
     if (pPlayerTags) pPlayerTags->Render(renderer());
-    //if (pNetGame && pNetGame->GetTextLabelPool()) pNetGame->GetTextLabelPool()->Render(renderer());
+    if (pNetGame && pNetGame->GetTextLabelPool()) pNetGame->GetTextLabelPool()->Render(renderer());
     //if (pNetGame && pNetGame->GetPlayerBubblePool()) pNetGame->GetPlayerBubblePool()->Render(renderer());
 
     if (pGPS) pGPS->DoPathDraw();

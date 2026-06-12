@@ -948,12 +948,69 @@ void DestroyPickup(RPCParameters *rpcParams)
 // 0.3.7
 void Create3DTextLabel(RPCParameters* rpcParams)
 {
+	Log::traceLastFunc("[RPC-IN] Create3DTextLabel");
 
+	if (!pNetGame || !pNetGame->GetTextLabelPool()) return;
+
+	unsigned char* Data = reinterpret_cast<unsigned char*>(rpcParams->input);
+	int iBitLength = rpcParams->numberOfBitsOfData;
+
+	uint16_t labelId = INVALID_3D_TEXT_LABEL;
+	uint32_t color = 0xFFFFFFFF;
+	CVector pos{0.0f, 0.0f, 0.0f};
+	float drawDistance = 0.0f;
+	uint8_t useLineOfSight = 0;
+	uint16_t attachedPlayerId = INVALID_PLAYER_ID;
+	uint16_t attachedVehicleId = INVALID_VEHICLE_ID;
+	char text[2048 + 1];
+	memset(text, 0, sizeof(text));
+
+	RakNet::BitStream bsData(Data, (iBitLength / 8) + 1, false);
+	bsData.Read(labelId);
+	bsData.Read(color);
+	bsData.Read(pos.x);
+	bsData.Read(pos.y);
+	bsData.Read(pos.z);
+	bsData.Read(drawDistance);
+	bsData.Read(useLineOfSight);
+	bsData.Read(attachedPlayerId);
+	bsData.Read(attachedVehicleId);
+
+	stringCompressor->DecodeString(text, 2048, &bsData);
+
+	pNetGame->GetTextLabelPool()->CreateTextLabel(labelId, text, color, pos, drawDistance,
+		useLineOfSight != 0, attachedPlayerId, attachedVehicleId);
 }
 // 0.3.7
 void Update3DTextLabel(RPCParameters* rpcParams)
 {
+	Log::traceLastFunc("[RPC-IN] Update/Destroy3DTextLabel");
 
+	if (!pNetGame || !pNetGame->GetTextLabelPool()) return;
+
+	unsigned char* Data = reinterpret_cast<unsigned char*>(rpcParams->input);
+	int iBitLength = rpcParams->numberOfBitsOfData;
+
+	uint16_t labelId = INVALID_3D_TEXT_LABEL;
+	RakNet::BitStream bsData(Data, (iBitLength / 8) + 1, false);
+	bsData.Read(labelId);
+
+	// SA-MP 0.3.7 id 58 is commonly ScrDestroy3DTextLabel.
+	// Some mobile/custom tables wire the same id as update and append color + compressed text.
+	if (bsData.GetNumberOfUnreadBits() > 32)
+	{
+		uint32_t color = 0xFFFFFFFF;
+		char text[2048 + 1];
+		memset(text, 0, sizeof(text));
+
+		bsData.Read(color);
+		stringCompressor->DecodeString(text, 2048, &bsData);
+		pNetGame->GetTextLabelPool()->Update3DLabel(labelId, color, text);
+	}
+	else
+	{
+		pNetGame->GetTextLabelPool()->Delete(labelId);
+	}
 }
 // 0.3.7
 void SetCheckpoint(RPCParameters* rpcParams)
