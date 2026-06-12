@@ -307,7 +307,19 @@ void DoInitStuff()
 		}
 		InitFPSFix(fpsLimit);
 
-		pNetGame = new CNetGame("gta-irz.com", 7777, "Luca_Runky", "");
+		if (pSettings)
+		{
+			pNetGame = new CNetGame(
+				pSettings->Get().szHost,
+				pSettings->Get().iPort,
+				pSettings->Get().szNickName,
+				pSettings->Get().szPassword
+			);
+		}
+		else
+		{
+			pNetGame = new CNetGame("127.0.0.1", 7777, "AndroidUser", "");
+		}
 		bNetworkInited = true;
 
         FLog("DoInitStuff end");
